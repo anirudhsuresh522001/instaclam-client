@@ -1,0 +1,68 @@
+import React,{useEffect,useState} from "react";
+import {Link} from "react-router-dom";
+import {useMutation} from "@apollo/react-hooks";
+import gql from "graphql-tag";
+import {Button,Icon,Label} from "semantic-ui-react";
+import MyPopup from "../util/MyPopup";
+
+
+
+function LikeButton({user,post:{id,likes,likeCount}})
+{
+    
+    const [liked,setLiked]=useState(false);
+    useEffect(()=>{
+        if(user&&likes.find((like)=>like.username===user.username))
+        {
+            setLiked(true);
+        }
+        else
+        {
+            setLiked(false);
+        }
+    },[user,likes]);
+
+
+    const [likePost]=useMutation(LIKE_POST_MUTATION,{
+        variables:{postID:id}
+    });
+
+    const likeButton=user?(
+        liked?(
+            <Button color='blue'><Icon name='thumbs up icon' /></Button>
+        ):(
+            <Button color='blue' basic><Icon name='thumbs up outline icon' /></Button>
+        )
+    ):(
+            <Button as={Link} to={"/login"} color='blue' basic><Icon name='thumbs up outline icon' /></Button>
+        )
+
+    return(
+        
+            <Button as='div' labelPosition='right' onClick={likePost}>
+                <MyPopup content={liked?"Unlike":"Like"}>{likeButton}</MyPopup>
+                <Label  basic color='blue' pointing='left'>{likeCount}</Label>
+            </Button>
+        
+    )
+}
+
+const LIKE_POST_MUTATION=gql`
+mutation likePost($postID:ID!){
+    likePost(postID:$postID)
+    {
+        id
+        likes{
+            id
+            username
+            createdAt
+        }
+        likeCount
+    }
+
+}
+`
+
+
+
+export default LikeButton;
