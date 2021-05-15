@@ -1,7 +1,7 @@
 import React,{useContext,useState,useRef} from "react";
 import gql from "graphql-tag";
 import {useMutation, useQuery} from "@apollo/react-hooks";
-import {Button, Card, Grid, Icon, Label,Image, CardContent,Form} from "semantic-ui-react";
+import {Button, Card, Grid, Icon, Label,Image,Form} from "semantic-ui-react";
 import moment from "moment"
 import LikeButton from "../components/LikeButton";
 import {AuthContext} from "../context/auth";
